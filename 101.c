@@ -29,20 +29,20 @@ void BubbleSortStudent(int n, Student data[n]) {
 int main(void) {
   srand(1204);
   int n = 10;
-  Student data[n];
+  Student data[n]; //構造体の配列
   for (int i = 0; i < n; i++) {
     Student s;
-    s.id = i;
-    s.avg = rand() % 100;
+    s.id = i;             //学籍番号
+    s.avg = rand() % 100; //平均点
     for (int j = 0; j < 8; j++) {
-      s.name[j] = 'a' + rand() % 26;
+      s.name[j] = 'a' + rand() % 26; // a~zのランダムな文字
     }
-    s.name[rand() % 8 + 1] = '\0';
+    s.name[rand() % 8 + 1] = '\0'; //終端文字
     data[i] = s;
   }
-  BubbleSortStudent(n, data);
+  BubbleSortStudent(n, data); //ソート
   for (int i = 0; i < n; i++) {
-    PrintStudent(data[i]);
+    PrintStudent(data[i]); //表示
   }
   return 0;
 }
