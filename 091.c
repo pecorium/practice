@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 void PrintData(int n, double data[n], int L, int R) {
   for (int i = 0; i < n; i++) {
     if (L <= i && i <= R)
@@ -12,8 +11,7 @@ void PrintData(int n, double data[n], int L, int R) {
 }
 
 void swap(double *x, double *y) {
-  double z;
-  z = *x;
+  double z = *x;
   *x = *y;
   *y = z;
 }
@@ -21,8 +19,9 @@ void swap(double *x, double *y) {
 void BubbleSort(int n, double data[n]) {
   for (int i = n; i > 1; i--) {
     for (int j = 0; j < i - 1; j++) {
-      if (data[j] > data[j + 1])
+      if (data[j] > data[j + 1]) {
         swap(&data[j], &data[j + 1]);
+      }
     }
     PrintData(n, data, 0, i - 1);
   }
