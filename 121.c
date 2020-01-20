@@ -3,16 +3,19 @@
 #include <stdlib.h>
 #include <tgmath.h>
 #include <time.h>
+
 void error(const char *message) { //エラーメッセージを表示して強制終了
   fprintf(stdout, "\x1b[33m%s\x1b[39m\n", message); //黄色で表示
   exit(EXIT_FAILURE);
 }
+
 void *alloc(size_t size, size_t n) { //エラーチェック付動的メモリ確保
   void *p = calloc(n, size); //ゼロクリアした動的メモリ確保
   if (p == NULL)
     error("cannot allocate memory");
   return p;
 }
+
 #define ALLOC(type) alloc(sizeof(type), 1) //型付動的メモリ確保(単体)
 #define ALLOCN(type, n) alloc(sizeof(type), n) //型付動的メモリ確保(配列)
 
@@ -38,6 +41,7 @@ void DisposeList(List *l) {
 void InsertList(List *l, int index, double x) {
   if (index < 0 || index > l->Count)
     error("index is out of range");
+
   if (l->Count < l->Size) {
     for (int i = l->Count - 1; i >= index; i--) {
       l->Data[i + 1] = l->Data[i];
@@ -69,4 +73,39 @@ void RemoveList(List *l, int index) {
     l->Data[i - 1] = l->Data[i];
   }
   l->Count--;
+}
+
+void PrintList(List *l) { //アレイリストのデータ一覧を表示
+  printf("list: ");
+  for (int i = 0; i < l->Size; i++) {
+    if (i < l->Count)
+      printf("%02.0f, ", l->Data[i]);
+    else
+      printf("--, ");
+  }
+  printf("\n");
+}
+
+int main(int argc, char *argv[]) {
+  if (argc != 2)
+    error("specify random seed"); //コマンドライン引数エラー
+  srand(atoi(argv[1]));
+  List *l = CreateList(); //アレイリストを作成
+  for (int i = 0; i < 12; i++) {
+    double x = rand() % 100;         //新データ
+    int a = rand() % (l->Count + 2); //位置
+    if (i < 2 || rand() % 2 == 0) {
+      printf("add %02.0f [--]: ", x);
+      AddList(l, x);
+    } else if (rand() % 2 == 0) {
+      printf("ins %02.0f [%02d]: ", x, a);
+      InsertList(l, a, x);
+    } else {
+      printf("rmv -- [%02d]: ", a);
+      RemoveList(l, a);
+    }
+    PrintList(l);
+  }
+  DisposeList(l); //アレイリストを廃棄
+  return 0;
 }
