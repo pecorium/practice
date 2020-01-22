@@ -54,7 +54,7 @@ void InsertList(List *l, int index, double x) {
     l->Data = ALLOCN(double, l->Size);
     for (int i = 0; i < index; i++) {
       l->Data[i] = old[i];
-    } 
+    }
     for (int i = index; i < l->Count; i++) {
       l->Data[i + 1] = old[i];
     }
@@ -86,26 +86,34 @@ void PrintList(List *l) { //アレイリストのデータ一覧を表示
   printf("\n");
 }
 
+bool IsPrime(int i, List *l) {
+  int m = (int)sqrt(i);
+  for (int j = 0; j < l->Count; j++) {
+    int k = l->Data[j];
+    if (k > m)
+      break;
+    if (i % k == 0)
+      return false;
+  }
+  return true;
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2)
-    error("specify random seed"); //コマンドライン引数エラー
-  srand(atoi(argv[1]));
-  List *l = CreateList(); //アレイリストを作成
-  for (int i = 0; i < 12; i++) {
-    double x = rand() % 100;         //新データ
-    int a = rand() % (l->Count + 2); //位置
-    if (i < 2 || rand() % 2 == 0) {
-      printf("add %02.0f [--]: ", x);
-      AddList(l, x);
-    } else if (rand() % 2 == 0) {
-      printf("ins %02.0f [%02d]: ", x, a);
-      InsertList(l, a, x);
-    } else {
-      printf("rmv -- [%02d]: ", a);
-      RemoveList(l, a);
-    }
-    PrintList(l);
+    error("specify number"); //コマンドライン引数エラー
+  int n = atoi(argv[1]);
+  List *l = CreateList();        //アレイリストを作成
+  clock_t c0 = clock();          //計測開始
+  for (int i = 2; i <= n; i++) { // 2以上n以下の整数
+    bool b = IsPrime(i, l);
+    if (!b)
+      continue;    //素数でなかった
+    AddList(l, i); //発見した素数を格納
+    printf("%d, ", i);
   }
-  DisposeList(l); //アレイリストを廃棄
+  clock_t c1 = clock();                             //計測終了
+  double span = (c1 - c0) / (double)CLOCKS_PER_SEC; //経過時間を計算
+  printf("\n%d以下の素数: %d個: %.2f秒\n", n, l->Count, span);
+  DisposeList(l);
   return 0;
 }
