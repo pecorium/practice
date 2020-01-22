@@ -7,7 +7,7 @@ typedef struct {
   double avg;
 } Student;
 
-void PrintStudent(Student s) {
+void PrintStudent(Student s) { // Student構造体のメンバー変数を表示する
   printf("%04d %-8s %4.1f\n", s.id, s.name, s.avg);
 }
 
